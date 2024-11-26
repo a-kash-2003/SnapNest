@@ -1,0 +1,36 @@
+# Python-related ignores
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Django-related ignores
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+
+# Django migrations
+*/migrations/
+
+# Media and static files
+media/
+staticfiles/
+
+# VS Code settings (if you're using VS Code)
+.vscode/
+
+# Virtual environment
+venv/
+env/
+
+# MacOS files
+.DS_Store
+
+# Others
+*.swp
