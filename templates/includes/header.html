@@ -3,7 +3,7 @@
         <logo>
             <a class="flex items-center gap-1" href="/">
                 <img class="w-7 -mt-1" src="https://img.icons8.com/small/64/ffffff/fire-heart.png"/>
-                <span class="text-lg font-bold">Awesome</span>
+                <span class="text-lg font-bold">SnapNest</span>
             </a>
         </logo>
         <mobileicon class="md:hidden">
@@ -19,7 +19,7 @@
     x-transition:enter-end="opacity-100 translate-y-0">
         <ul class="flex items-center navitems flex-col md:flex-row gap-8 md:gap-0 justify-center h-full -translate-y-10 md:translate-y-0">
             <li><a href="/">Home</a></li>
-            <li><a href="">Create Post</a></li>
+            <li><a href="{% url 'create' %}">Create Post</a></li>
             <li x-data="{ dropdownOpen: false }" class="relative">
                 <a @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="cursor-pointer select-none">
                     <img class="h-8 w-8 rounded-full object-cover" src="https://pbs.twimg.com/profile_images/508601156767997952/fFTdKUf2_400x400.jpeg"/>
