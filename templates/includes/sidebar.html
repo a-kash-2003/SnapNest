@@ -1,3 +1,5 @@
+{% load static %}
+
 <aside x-show="mobileSidebarOpen" x-cloak class="md:!block col-span-full md:col-span-1 lg:mr-[20%] order-1 md:order-2"
 x-transition:enter="duration-300 ease-out"
 x-transition:enter-start="opacity-0 -mt-96"
@@ -5,35 +7,19 @@ x-transition:enter-end="opacity-100 mt-0">
     <section class="card p-4">
         <h2>Categories</h2>
         <ul class="hoverlist">
-            <li class="highlight">
-                <a href="">
-                    <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/landscape.png">
-                    <span class="font-bold text-sm">Landscape</span>
+            {% for category in categories%}
+            <li class="{% if category.slug == tag.slug %} highlight {% endif %}">
+                <a href="{% url 'category' category.slug %}">
+                    <img class="w-8 h-8 object-cover mr-2" src="{{ category.image.url }}">
+                    <span class="font-bold text-sm">{{category.name}}</span>
                 </a>
             </li>
-            <li>
-                <a href="">
-                    <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/portrait.png">
-                    <span class="font-bold text-sm">People</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/dog.png">
-                    <span class="font-bold text-sm">Animals</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/180-degrees.png">
-                    <span class="font-bold text-sm">Black & White</span>
-                </a>
-            </li>
+            {% endfor %}
         </ul>
     </section>
     <section class="card p-4">
         <div class="flex items-center">
-            <img class="w-7 mr-2 -mt-3" src="https://img.icons8.com/ios-glyphs/90/null/fire-heart.png"/>
+            <img class="w-6 mr-2 -mt-3" src="{% static 'images/fireheart_black.svg' %}"/>
             <h2>Top Posts</h2>
         </div>
         <ul class="hoverlist">
@@ -61,7 +47,7 @@ x-transition:enter-end="opacity-100 mt-0">
     </section>
     <section class="card p-4">
         <div class="flex items-center">
-            <img class="w-7 mr-2 -mt-3" src="https://img.icons8.com/ios-glyphs/90/null/fire-heart.png"/>
+            <img class="w-6 mr-2 -mt-3" src="{% static 'images/fireheart_black.svg' %}"/>
             <h2>Top Comments</h2>
         </div>
         <ul class="hoverlist">

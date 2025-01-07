@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect,get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 from bs4 import BeautifulSoup
@@ -6,11 +7,21 @@ import requests
 from django.contrib import messages
 
 # Create your views here.
-def home(request):
-    post=Post.objects.all()
-    context={'posts':post}
+def home(request, tag=None):
+    if tag:
+        post=Post.objects.filter(tags__slug=tag)
+        tag=get_object_or_404(Tag, slug=tag)
+    else:
+        post=Post.objects.all()
+    categories=Tag.objects.all()
+    context={
+        'posts': post,
+        'categories': categories,
+        'tag': tag
+    }
     return render(request,'a_posts/home.html',context)
 
+@login_required
 def post_create(request):
     form=PostCreateForm()
     if request.POST:
@@ -33,13 +44,17 @@ def post_create(request):
             artist=find_artist[0].text.strip()
             post.artist=artist
 
+            post.author=request.user
+
             post.save()
+            form.save_m2m()
             return redirect('home')
     context={'form':form}
     return render(request,'a_posts/post_create.html',context)
 
-def post_delete(request,pk):
-    post=get_object_or_404(Post,id=pk)
+@login_required
+def post_delete(request, pk):
+    post=get_object_or_404(Post,id=pk,author=request.user)
     if request.POST:
         post.delete()
         messages.success(request,'Post Deleted')
@@ -47,8 +62,9 @@ def post_delete(request,pk):
     context={'post':post}
     return render(request,'a_posts/post_delete.html',context)
 
-def post_edit(request,pk):
-    post=get_object_or_404(Post,id=pk)
+@login_required
+def post_edit(request, pk):
+    post=get_object_or_404(Post,id=pk,author=request.user)
     form=PostEditForm(instance=post)
     if request.POST:
         form=PostEditForm(request.POST,instance=post)
@@ -62,7 +78,7 @@ def post_edit(request,pk):
         }
     return render(request,'a_posts/post_edit.html',context)
 
-def post_page(request,pk):
+def post_page(request, pk):
     post=get_object_or_404(Post,id=pk)
     context={
         'post':post
