@@ -28,8 +28,14 @@
         </div>
         <div class="flex items-center justify-between text-sm px-2">
             <a class="font-bold hover:underline" href="{% url 'post_page' post.id %}">
-                Comments
-                <span class="font-light text-gray-500 ml-1">3</span>
+                {% if post.comments.count %}
+                    Comments
+                    <span class="font-light text-gray-500 ml-1">{{post.comments.count}}</span>
+                {% else %}
+                    {% if user.is_authenticated %}
+                        Add comment
+                    {% endif %}
+                {% endif %}
             </a>
             <div class="flex items-center gap-4 [&>a:hover]:underline">
                 <div class="flex items-center gap-1">

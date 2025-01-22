@@ -29,3 +29,25 @@ class PostEditForm(ModelForm):
             'body':forms.Textarea(attrs={'rows': 3, 'class':'font1 text-4xl'}),
             'tags':forms.CheckboxSelectMultiple(),
         }
+
+class CommentForm(ModelForm):
+    class Meta:
+        model=Comment
+        fields=['body']
+        widgets={
+            'body':forms.TextInput(attrs={'placeholder':'Add comment ...'}),
+        }
+        labels={
+            'body':''
+        }
+
+class ReplyForm(ModelForm):
+    class Meta:
+        model=Reply
+        fields=['body']
+        widgets={
+            'body':forms.TextInput(attrs={'placeholder':'Add reply ...', 'class':'text-sm'}),
+        }
+        labels={
+            'body':''
+        }
