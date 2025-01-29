@@ -19,14 +19,16 @@
     </p>
     <div x-data="{ repliesOpen: false }" class="flex items-center justify-between flex-wrap text-sm px-2">
         <a @click="repliesOpen = !repliesOpen" class="font-bold hover:underline cursor-pointer">
+            {% if comment.replies.count or user.is_authenticated %}
             <div class="inline-block" x-bind:class="repliesOpen && 'rotate-90 duration-300'">
                 <svg transform ="rotate(90)" width="9" height="9" viewBox="0 0 25 25">
                     <path d="M24 22h-24l12-20z"/>
                 </svg>
             </div>
+            {% endif %}
             {% if comment.replies.count %}
             Replies
-            <span class="font-light text-gray-500 ml-1">{{ comment.replies.count }}</span>
+            <span id="replycount-{{ comment.id }}" class="font-light text-gray-500 ml-1">{{ comment.replies.count }}</span>
             {% else %}
                 {% if user.is_authenticated %}
                 Add reply
@@ -34,11 +36,9 @@
             {% endif %}
         </a>
         <div class="flex items-center gap-4 [&>a:hover]:underline">
-            <div class="flex items-center gap-1">
-                <img class="w-5 -mt-1" src="https://img.icons8.com/small/24/000000/fire-heart.png">
-                1
-            </div>
-            <a href="">Like</a>
+            
+            {% include 'snippets/like_comment.html' %}
+
             {% if user.is_authenticated and comment.author == user %}
             <a href="{% url 'comment_delete' comment.id %}">Delete</a>
             {% endif %}
@@ -50,11 +50,16 @@
             {% include 'a_posts/replies.html' %}
             {% endfor %}
 
-            <form method="POST" action="{% url 'reply' comment.id %}" class="replyform flex justify-between" autocomplete="off">
+            {% if user.is_authenticated %}
+            <form class="replyform flex justify-between" autocomplete="off" 
+            hx-post="{% url 'reply' comment.id %}"
+            hx-target="this"
+            hx-swap="outerHTML">
                 {% csrf_token %}
                 {{ replyform }}
                 <button class="block" type="submit">Submit</button>
             </form>
+            {% endif %}
         </div>
     </div> 
 </comment>

@@ -4,19 +4,26 @@
 
 {% include 'a_posts/post.html'%}
 
+{% if user.is_authenticated %}
 <div class="card !pb-0 -mt-3">
-    <form method="POST" action="{% url 'comment' post.id %}" class="flex items-center p-4" autocomplete="off">
+    <form class="flex items-center p-4" autocomplete="off"
+    hx-post="{% url 'comment' post.id %}"
+    hx-target="#tab-contents"
+    hx-swap="afterbegin"
+    _="on htmx:afterRequest reset() me">
         {% csrf_token %}
         {{ commentform }}
         <button @click="open = false" class="block ml-2" type="submit">Submit</button>
     </form>
 </div>
+{% endif %}
 
 {% if post.comments.count %}
 <div class="mb-20">
-    <div id="tabs" class="ml-4 flex gap-1 mb-4">
-        <a class="tab selected">Newest First</a> 
-        <a class="tab">Top Comments</a>
+    <div id="tabs" class="ml-4 flex gap-1 mb-4" hx-target="#tab-contents" hx-swap="innerHTML" 
+    _="on htmx:afterOnLoad take .selected for event.target">
+        <a hx-get="{% url 'post_page' post.id %}" class="tab selected">Newest First</a> 
+        <a hx-get="{% url 'post_page' post.id %}?top" class="tab">Top Comments</a>
     </div>
     <div id="tab-contents">
         {% for comment in post.comments.all %}
@@ -25,6 +32,5 @@
     </div>
 </div>
 {% endif %}
-
 
 {% endblock content %}

@@ -30,7 +30,7 @@
             <a class="font-bold hover:underline" href="{% url 'post_page' post.id %}">
                 {% if post.comments.count %}
                     Comments
-                    <span class="font-light text-gray-500 ml-1">{{post.comments.count}}</span>
+                    <span id="commentscount-{{ post.id }}" class="font-light text-gray-500 ml-1">{{post.comments.count}}</span>
                 {% else %}
                     {% if user.is_authenticated %}
                         Add comment
@@ -38,11 +38,9 @@
                 {% endif %}
             </a>
             <div class="flex items-center gap-4 [&>a:hover]:underline">
-                <div class="flex items-center gap-1">
-                    <img class="w-5 -mt-1" src="https://img.icons8.com/small/24/000000/fire-heart.png">
-                    1
-                </div>
-                <a href="">Like</a>
+                
+                {% include 'snippets/like_post.html' %}
+
                 {% if user.is_authenticated and post.author == user %}
                 <a href="{% url 'edit' post.id %}">Edit</a>
                 <a href="{% url 'delete' post.id %}">Delete</a>
