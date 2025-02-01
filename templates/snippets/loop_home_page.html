@@ -1,7 +1,3 @@
-{% extends 'layouts/a.html' %}
-
-{% block content %}
-
 {% for post in posts %}
 {% include 'a_posts/post.html'%}
 {% endfor %}
@@ -14,5 +10,3 @@
     hx-swap="outerHTML">
 </div>
 </fade-in>
-
-{% endblock content %}

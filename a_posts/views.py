@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.db.models import Count
 from .models import *
 from .forms import *
+from django.core.paginator import Paginator
 from bs4 import BeautifulSoup
 import requests
 from django.contrib import messages
@@ -11,16 +12,26 @@ from django.contrib import messages
 
 def home(request, tag=None):
     if tag:
-        post=Post.objects.filter(tags__slug=tag)
+        posts=Post.objects.filter(tags__slug=tag)
         tag=get_object_or_404(Tag, slug=tag)
     else:
-        post=Post.objects.all()
-    categories=Tag.objects.all()
+        posts=Post.objects.all()
+    
+    paginator= Paginator(posts,3)
+    page=int(request.GET.get('page',1))
+    try:
+        posts=paginator.page(page)
+    except:
+        return HttpResponse('')
+
     context={
-        'posts': post,
-        'categories': categories,
-        'tag': tag
+        'posts': posts,
+        'tag': tag,
+        'page':page
     }
+    if request.htmx:
+        return render(request,'snippets/loop_home_page.html',context)
+
     return render(request,'a_posts/home.html',context)
 
 
@@ -90,7 +101,6 @@ def post_page(request, pk):
     replyform=ReplyForm()
     if request.htmx:
         if 'top' in request.GET:
-            # comments=post.comments.filter(likes__isnull=False).distinct()
             comments=post.comments.annotate(like_count=Count('likes')).filter(like_count__gt=0).order_by('-like_count')
         else:
             comments=post.comments.all()

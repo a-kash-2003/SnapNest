@@ -4,8 +4,10 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.contrib.auth import logout
+from django.db.models import Count
 from django.contrib import messages
 from .forms import *
+from a_posts.forms import ReplyForm
 from .models import *
 
 # Create your views here.
@@ -17,7 +19,24 @@ def profile(request,username=None):
             profile= request.user.profile
         except:
             raise Http404
-    return render(request,'a_users/profile.html',{'profile': profile})
+    posts=profile.user.posts.all()
+    if request.htmx:
+        if 'top-posts' in request.GET:
+            posts=profile.user.posts.annotate(like_count=Count('likes')).filter(like_count__gt=0).order_by('-like_count')
+        elif 'top-comments' in request.GET:
+            comments=profile.user.comments.annotate(like_count=Count('likes')).filter(like_count__gt=0).order_by('-like_count')
+            replyform=ReplyForm
+            return render(request,'snippets/loop_profile_comments.html', {'comments': comments, 'replyform': replyform})
+        elif 'liked-posts' in request.GET:
+            posts=profile.user.liked_post.order_by('-like_post__created')
+        return render(request,'snippets/loop_profile_posts.html', {'posts': posts})
+
+    context={
+        'profile': profile,
+        'posts': posts,
+    }
+    return render(request,'a_users/profile.html', context)
+
 
 @login_required
 def profile_edit(request):
@@ -32,6 +51,7 @@ def profile_edit(request):
     else:
         template = 'a_users/profile_edit.html'
     return render(request, template, {'form' : form})
+
 
 @login_required
 def profile_delete(request):
