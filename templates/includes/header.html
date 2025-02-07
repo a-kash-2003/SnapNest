@@ -23,6 +23,14 @@
             {% if user.is_authenticated %}
             <li><a href="/">Home</a></li>
             <li><a href="{% url 'create' %}">Create Post</a></li>
+            <li class="relative">
+                <div class="absolute top-3 right-1"
+                hx-get="{% url 'notify_inbox' %}"
+                hx-trigger="load"
+                hx-target="this"
+                hx-swap="innerHTML">
+                </div>
+                <a href="{% url 'inbox' %}">Inbox</a></li>
             <li x-data="{ dropdownOpen: false }" class="relative">
                 <a @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="cursor-pointer select-none">
                     <img class="h-8 w-8 rounded-full object-cover" src="{{ user.profile.avatar }}"/>

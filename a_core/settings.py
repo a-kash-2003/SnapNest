@@ -22,6 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-x3#1u!p6e92fleg6afr=te^dgyn9vj&hh(*o$slz5v_riozx0j'
 
+ENCRYPT_KEY = b'sd5U-rYyrXp-wmtBlnT1SW22_w2rI0iLctxH6eHWS7g='
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'a_posts',
     'a_users',
+    'a_inbox',
 ]
 
 SITE_ID = 1
@@ -152,4 +155,4 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_BLACKLIST = ['admin','superuser','account','profile','category','post']
+ACCOUNT_USERNAME_BLACKLIST = ['admin','superuser','account','profile','category','post','inbox']

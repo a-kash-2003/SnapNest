@@ -17,6 +17,7 @@ urlpatterns = [
     path('post/post_page/<pk>/', post_page, name='post_page'),
     path('post/like/<pk>/', like_post, name='like_post'),
     path('profile/', profile, name='profile'),
+    path('inbox/', include('a_inbox.urls')),
     path('<username>/', profile, name='profile_visit'),
     path('profile/edit/', profile_edit, name='profile_edit'),
     path('profile/delete/', profile_delete, name='profile_delete'),

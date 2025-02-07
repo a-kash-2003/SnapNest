@@ -9,6 +9,7 @@ from django.contrib import messages
 from .forms import *
 from a_posts.forms import ReplyForm
 from .models import *
+from a_inbox.forms import InboxNewMessageForm
 
 # Create your views here.
 def profile(request,username=None):
@@ -30,10 +31,13 @@ def profile(request,username=None):
         elif 'liked-posts' in request.GET:
             posts=profile.user.liked_post.order_by('-like_post__created')
         return render(request,'snippets/loop_profile_posts.html', {'posts': posts})
+    
+    new_message_form=InboxNewMessageForm()
 
     context={
         'profile': profile,
         'posts': posts,
+        'new_message_form':new_message_form,
     }
     return render(request,'a_users/profile.html', context)
 
